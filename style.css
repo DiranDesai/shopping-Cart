@@ -2,11 +2,15 @@
 
 
 :root{
-    --color1: rgb(36 53 88 / 80%);
+    --color1: rgb(13 110 253);
 }
 
 body{
-    font-family: "Roboto";
+    /* font-family: "Roboto"; */
+}
+
+img{
+    object-fit: cover;
 }
 
 .container-fluid{
@@ -26,7 +30,9 @@ header h1{
 header i{
     font-size: 2rem;
     color: var(--color1);
+    cursor: pointer;
 }
+
 
 header .busket{
     position: relative;
@@ -43,6 +49,9 @@ header .cart-num{
    display: flex;
    align-items: center;
    justify-content: center;
+}
+.product-search{
+    border-right: 1px solid #e6e7f18c;
 }
 
 .companies-search p{
@@ -64,4 +73,42 @@ header .cart-num{
     color: white;
     padding: 10px;
     border-radius: 5px;
+}
+
+.cart-container{
+    position: fixed;
+    width: 400px;
+    height: 100%;
+    right: -400px;
+    top: 0;
+    box-shadow: 0px 1px 10px 0px rgb(0 0 0 / 10%);
+    z-index: 1000;
+    padding: 20px;
+    background-color: #fff;
+    transition: all 0.3s ease-in;
+}
+
+.cart-container.open{
+    right: 0;
+}
+
+.cart-container img{
+    width: 60px;
+    height: 60px;
+    border-radius: 5px;
+    margin-right: 20px;
+}
+.cart-container .cart{
+    border-bottom: 1px solid #e6e7f18c;
+    padding: 10px 0;
+}
+.cart-container .cart-controls{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.cart-container .cart-body{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }

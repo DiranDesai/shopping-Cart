@@ -46,7 +46,14 @@ const productsContainer = document.querySelector(".products-container");
 const productSearch = document.querySelector(".product-search");
 const rangePrice = document.querySelector(".range-price");
 const companiesDOM = document.querySelector(".companies-search");
+const busketButton = document.querySelector(".busket-button");
+const cartClose = document.querySelector(".cart-close");
+const cartContainer = document.querySelector(".cart-container");
+const cartsWrapper = document.querySelector(".carts");
+const cartNum = document.querySelector(".cart-num");
 
+let products;
+let carts = [];
 const companies = [];
 
 
@@ -63,18 +70,13 @@ function renderCompanies(){
 
     companiesDOM.addEventListener("click", (e) => {
         let company = e.target.innerText;
-        
+
         manipulateProducts();
         products = products.filter(product => product.company === company);
         renderProducts();
     });
 }
 
-
-
-console.log(companiesDOM);
-
-let products;
 
 function renderProducts() {
     if (products.length <= 0) {
@@ -91,7 +93,7 @@ function renderProducts() {
                 <div class="mt-4">
                     <h5>${name}</h5>
                     <p>$${price}</p>
-                    <button data-id=${id}>Add To Cart</button>
+                    <button data-id=${id} class="cart-btn">Add To Cart</button>
                 </div>
             </div>
         </div>
@@ -99,6 +101,20 @@ function renderProducts() {
     });
 
     productsContainer.innerHTML = productsDOM.join("");
+
+    const cartButtons = productsContainer.querySelectorAll(".cart-btn");
+
+    cartButtons.forEach(cartButton => {
+        cartButton.addEventListener("click", addToCartFunc);
+    });
+}
+
+function addToCartFunc(e){
+    const target = e.target;
+    const productId = Number(target.dataset.id);
+    const findProduct = originalProducts.find(product => product.id === productId);
+    carts.push(findProduct);
+    updateCart();
 }
 
 function manipulateProducts(){
@@ -125,6 +141,49 @@ function handlePriceChange(e){
     renderProducts();
 }
 
+function openCart(){
+    cartContainer.classList.add("open");
+}
+
+function closeCart(){
+    cartContainer.classList.remove("open");
+}
+
+function updateCart(){
+    cartNum.innerText = carts.length;
+    const cartDOM = carts.map(cart => {
+        const {name, img, price} = cart;
+        return `
+        <div class="cart col-12">
+        <div class="row">
+            <div class="col-8 d-flex align-items-center">
+                <img src="images/${img}" alt="">
+                <div>
+                    <h5>${name}</h5>
+                    <p>$${price}</p>
+                    <button class="btn btn-danger">Remove</button>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="cart-controls">
+                    <button class="cart-item-increase-btn">
+                        <i class="fas fa-chevron-up"></i>
+                    </button>
+                    <span class="cart-item-amount">1</span>
+                    <button class="cart-item-decrease-btn">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    `;
+    });
+
+    cartsWrapper.innerHTML = cartDOM.join("");
+
+}
+
 
 
 
@@ -132,9 +191,12 @@ document.addEventListener("DOMContentLoaded", () => {
     renderCompanies();
     manipulateProducts();
     renderProducts();
+    updateCart();
 });
 
 
 
 rangePrice.addEventListener("change", handlePriceChange);
 productSearch.addEventListener("keyup", handleNameChange);
+busketButton.addEventListener("click", openCart);
+cartClose.addEventListener("click", closeCart);
