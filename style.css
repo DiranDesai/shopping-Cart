@@ -67,13 +67,6 @@ header .cart-num{
     height: 150px;
     object-fit: cover;
 }
-.products-wrapper button{
-    border: none;
-    background-color: var(--color1);
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-}
 
 .cart-container{
     position: fixed;

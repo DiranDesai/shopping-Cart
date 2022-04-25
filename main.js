@@ -53,7 +53,7 @@ const cartsWrapper = document.querySelector(".carts");
 const cartNum = document.querySelector(".cart-num");
 
 let products;
-let carts = [];
+let carts = getCartStorage();
 const companies = [];
 
 
@@ -93,7 +93,7 @@ function renderProducts() {
                 <div class="mt-4">
                     <h5>${name}</h5>
                     <p>$${price}</p>
-                    <button data-id=${id} class="cart-btn">Add To Cart</button>
+                    <button data-id=${id} class="btn btn-primary cart-btn">Add To Cart</button>
                 </div>
             </div>
         </div>
@@ -114,6 +114,7 @@ function addToCartFunc(e){
     const productId = Number(target.dataset.id);
     const findProduct = originalProducts.find(product => product.id === productId);
     carts.push(findProduct);
+    setCartStorage();
     updateCart();
 }
 
@@ -149,10 +150,22 @@ function closeCart(){
     cartContainer.classList.remove("open");
 }
 
+function getCartStorage(){
+    if (localStorage.getItem("carts") !== null) {
+        return JSON.parse(localStorage.getItem("carts"));
+    } else{
+        return [];
+    }
+}
+
+function setCartStorage(){
+    localStorage.setItem("carts", JSON.stringify(carts));
+}
+
 function updateCart(){
     cartNum.innerText = carts.length;
     const cartDOM = carts.map(cart => {
-        const {name, img, price} = cart;
+        const {id, name, img, price} = cart;
         return `
         <div class="cart col-12">
         <div class="row">
@@ -161,7 +174,7 @@ function updateCart(){
                 <div>
                     <h5>${name}</h5>
                     <p>$${price}</p>
-                    <button class="btn btn-danger">Remove</button>
+                    <button class="btn btn-danger cart-remove" data-id=${id}>Remove</button>
                 </div>
             </div>
             <div class="col-4">
@@ -182,6 +195,21 @@ function updateCart(){
 
     cartsWrapper.innerHTML = cartDOM.join("");
 
+    const cartRemoveButtons = cartsWrapper.querySelectorAll(".cart-remove");
+
+    cartRemoveButtons.forEach(cartRemoveButton => {
+        cartRemoveButton.addEventListener("click", removeCart);
+    });
+
+}
+
+function removeCart(e){
+    const target = e.target;
+    const productId = Number(target.dataset.id);
+
+    carts = carts.filter(cart => cart.id !== productId);
+    setCartStorage();
+    updateCart();
 }
 
 
