@@ -113,6 +113,12 @@ function addToCartFunc(e){
     const target = e.target;
     const productId = Number(target.dataset.id);
     const findProduct = originalProducts.find(product => product.id === productId);
+
+    if(carts.includes(findProduct)){
+        alert("Product Already added to cart");
+        return;
+    }
+
     carts.push(findProduct);
     setCartStorage();
     updateCart();
@@ -164,6 +170,9 @@ function setCartStorage(){
 
 function updateCart(){
     cartNum.innerText = carts.length;
+    const cartPrice = carts.reduce((total, cart) => total += cart.price, 0);
+    document.querySelector(".cart-total").innerHTML = `Total: $${cartPrice}`;
+
     const cartDOM = carts.map(cart => {
         const {id, name, img, price} = cart;
         return `
